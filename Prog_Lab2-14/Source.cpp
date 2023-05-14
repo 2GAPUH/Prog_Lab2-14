@@ -12,6 +12,7 @@ void StackLoop()
 	mainStack stack = {NULL, NULL, NULL};
 	int userChoice = NULL;
 	double tmp;
+	int max, min;
 	bool loop = 1;
 
 
@@ -46,6 +47,20 @@ void StackLoop()
 			break;
 
 		case 5:
+			max = -1, min = 10;
+			while (getchar() != '\n');
+			printf_s("Enter your number: ");
+			while ((tmp = getchar()) != '\n')
+			{
+				tmp -= '0';
+				if (tmp > max)
+					max = tmp;
+				if (tmp < min)
+					min = tmp;
+				PushToStack(&stack, tmp);
+			}
+			if(max != -1)
+				printf_s("max = %d\t min = %d\n", max, min);
 			break;
 
 		case 6:
