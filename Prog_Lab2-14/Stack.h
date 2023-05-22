@@ -1,16 +1,19 @@
 #pragma once
 
-struct mainStack
+struct stack
 {
-	double* array;
-	double* top;
-	int elementsCount;
+	double* arr = NULL;
+	int length = -1;
+	int top = -1;
 };
 
-void InitStack(mainStack* stack, double number);
-void PrintStack(mainStack* stack);
-void DestroyStack(mainStack* stack);
-void PushToStack(mainStack* stack, double number);
-double PopStack(mainStack* stack);
-double PeekStack(mainStack* stack);
-void ClearStack(mainStack* stack);
+bool InitStack(stack* s);
+bool PushStack(stack* s, double v);
+double PopStack(stack* s);
+double PeekStack(stack* const s);
+bool IsEmptyStack(stack* const s);
+void ClearStack(stack* s);
+void PrintStack(stack* const s);
+void DestroyStack(stack* s);
+
+void PrintStackInReverseOrder(stack* s);

@@ -5,98 +5,73 @@
 #include <time.h>
 #include "Stack.h"
 
-
-void InitStack(mainStack* stack, double number)
+bool InitStack(stack* s)
 {
-	stack->array = (double*)malloc(sizeof(double));
-	stack->elementsCount++;
-	stack->top = &stack->array[stack->elementsCount - 1];
-	stack->array[stack->elementsCount - 1] = number;
+	if (s->length <= 2)
+		return 0;
+	s->arr = (double*)malloc(sizeof(double) * s->length);
+	if (s->arr == NULL)
+		return 0;
+	
+	s->top = -1;
+	return 1;
 }
 
-void PrintStack(mainStack* stack)
+bool PushStack(stack* s, double v)
 {
-	if (stack->elementsCount <= 0)
-	{
-		printf_s("Your stack is empty\n");
-		return;
-	}
+	if (s->top + 1 >= s->length)
+		return 0;
+	s->arr[++s->top] = v;
+	return 1;
+}
 
-	for (int i = stack->elementsCount - 1; i >= 0; i--)
-		printf_s("%.2lf ", stack->array[i]);
+double PopStack(stack* s)
+{
+	if (s->top < 0)
+		return LONG_MAX;
+	return s->arr[s->top--];
+}
+
+double PeekStack(stack* const s)
+{
+	if (s->top < 0)
+		return LONG_MAX;
+	return s->arr[s->top];
+}
+
+bool IsEmptyStack(stack* const s)
+{
+	return s->top == -1;
+}
+
+void ClearStack(stack* s)
+{
+	s->top = -1;
+}
+
+void PrintStack(stack* const s)
+{
+	if (s->length < 1)
+		return;
+
+	for (int i = 0; i <= s->top; i++)
+		printf_s("%0.2lf\t", s->arr[i]);
 	printf_s("\n");
 }
 
-void DestroyStack(mainStack* stack)
+void PrintStackInReverseOrder(stack* s)
 {
-	if (stack->array)
-		free(stack->array);
-}
-
-void PushToStack(mainStack* stack, double number)
-{
-	if (stack->elementsCount == NULL)
-	{
-		InitStack(stack, number);
-		if (!stack->array)
-		{
-			printf_s("Can't allocate memory.\n");
-			system("pause");
-			exit(1);
-		}
+	if (s->length < 1)
 		return;
-	}
 
-	stack->elementsCount++;
-	if (!(stack->array = (double*)realloc(stack->array, sizeof(double) * stack->elementsCount)))
-	{
-		printf_s("Can't allocate memory.\n");
-		stack->elementsCount--;
-		return;
-	}
-
-	stack->array[stack->elementsCount - 1] = number;
-	stack->top = &stack->array[stack->elementsCount - 1];
+	for (int i = s->top; i >= 0; i--)
+		printf_s("%0.0lf\t", s->arr[i]);
+	printf_s("\n");
 }
 
-double PopStack(mainStack* stack)
+void DestroyStack(stack* s)
 {
-	double tmp = LONG_MAX;
-
-	if (stack->elementsCount > 1)
-	{
-		tmp = *stack->top;
-		stack->elementsCount--;
-		stack->top = &stack->array[stack->elementsCount - 1];
-		return tmp;
-	}
-
-	else if (stack->elementsCount == 1)
-	{
-		tmp = *stack->top;
-		stack->elementsCount--;
-		stack->top = NULL;
-		free(stack->array);
-		stack->array = NULL;
-		return tmp;
-	}
-
-	return tmp;
-}
-
-double PeekStack(mainStack* stack)
-{
-	if (stack->elementsCount > 0)
-		return *stack->top;
-
-	return LONG_MAX;
-}
-
-void ClearStack(mainStack* stack)
-{
-	stack->elementsCount = NULL;
-	stack->top = NULL;
-	if (stack->array != NULL)
-		free(stack->array);
-	stack->array = NULL;
+	s->length = -1;
+	s->top = -1;
+	free(s->arr);
 }
